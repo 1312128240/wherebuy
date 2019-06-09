@@ -316,6 +316,7 @@ export default class SearchGoodsPage extends Component{
                 active:pos,
                 priceSorted:0,
                 currentPage:1,
+                item_data:[],
             });
             //综合
             if(pos === 1){

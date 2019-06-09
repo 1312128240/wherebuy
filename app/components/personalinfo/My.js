@@ -66,18 +66,27 @@ export default class My extends Component{
      return (
          <View style={{height:315,backgroundColor:'#F5F5F5'}}>
            <Image style={styles.head_bg_img} source={{uri:'http://qnm.laykj.cn/image/member_head_bg.png'}}/>
-           <TouchableOpacity style={styles.head_img_touch} onPress={() => this.toProfilePage()}>
+           <TouchableOpacity
+               activeOpacity={0.7}
+               style={styles.head_img_touch}
+               onPress={() => this.toProfilePage()}>
              <Image style={styles.head_img} source={{uri:this.state.headImg}}/>
            </TouchableOpacity>
            <Text style={styles.user_name} selectable={true}>{this.state.name}</Text>
-           <TouchableOpacity style={styles.setting_img_touch} onPress={() => this.toSettingPage()}>
+           <TouchableOpacity
+               activeOpacity={0.7}
+               style={styles.setting_img_touch}
+               onPress={() => this.toSettingPage()}>
              <Image style={styles.setting_img} source={{uri:'http://qnm.laykj.cn/image/set.png'}}/>
            </TouchableOpacity>
            <View style={styles.order_area}>
              <Image style={styles.my_order_img} source={{uri:'http://qnm.laykj.cn/image/order_my.png'}}/>
              <Text style={styles.my_order_text}>我的订单</Text>
              <Image style={styles.all_order_img} source={{uri:'http://qnm.laykj.cn/image/order_more.png'}}/>
-             <TouchableOpacity style={styles.all_order_text_touch} onPress={() => this.props.navigation.navigate('OrderListPage1')}>
+             <TouchableOpacity
+                 activeOpacity={0.7}
+                 style={styles.all_order_text_touch}
+                 onPress={() => this.props.navigation.navigate('OrderListPage1')}>
                <Text style={styles.all_order_text}>查看全部订单</Text>
              </TouchableOpacity>
              <View style={styles.order_line}/>
@@ -179,7 +188,7 @@ export default class My extends Component{
    */
   renderOrderStatusView(PageId,imgUrl,tip) {
     return (
-      <TouchableOpacity style={styles.order_status_touch} 
+      <TouchableOpacity activeOpacity={0.7} style={styles.order_status_touch}
           onPress={() =>this.props.navigation.navigate('OrderListPage'+PageId)}>
           <Image style={styles.order_status_img} source={{uri:imgUrl}}/>
           <Text style={styles.order_status_text}>{tip}</Text>

@@ -362,8 +362,10 @@ export default class ModificationCustomerAddrPage extends Component{
     }
 
     _jump=()=>{
-        this.props.navigation.state.params.update();
-        this.props.navigation.goBack();
+        setTimeout(() => {
+            this.props.navigation.state.params.update();
+            this.props.navigation.goBack();
+        }, 1000)
     }
 }
 

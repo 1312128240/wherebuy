@@ -14,6 +14,8 @@ import {
 import {HTTP_REQUEST} from "../../utils/config";
 import asyncStorageUtil from "../../utils/AsyncStorageUtil";
 import {dateToString} from '../../utils/dateUtil'
+import Toast from 'react-native-easy-toast';
+
 const {width,height} = Dimensions.get('window');
 
 /**
@@ -70,6 +72,12 @@ export default class ConfirmOrder extends Component{
                         共{this.state.orderData.totalPipce}件  合计: ￥{this.state.orderData.totalPrice}元
                     </Text>
                 </View>
+                <Toast
+                    ref="toast"
+                    style={{backgroundColor:'gray'}}
+                    position='bottom'
+                    positionValue={200}
+                    textStyle={{color:'white'}}/>
             </View>
         );
     }
@@ -132,11 +140,11 @@ export default class ConfirmOrder extends Component{
                     </Text>
                     <Text
                         style={styles.receiver_phone}>
-                        {this.state.addressData.mobile}
+                        电话号码：{this.state.addressData.mobile}
                     </Text>
                     <Text
                         style={styles.receiver_address}>
-                        {this.state.addressData.areaName}
+                        收货地址：{this.state.addressData.areaName}
                         {this.state.addressData.smallName}
                         {this.state.addressData.addressTwo}
                     </Text>
@@ -309,7 +317,7 @@ export default class ConfirmOrder extends Component{
             })
         })
         .catch((error) =>{
-            console.error(error);
+            this.refs.toast.show('地址获取失败',1000);
         })
     }
 
@@ -333,7 +341,7 @@ export default class ConfirmOrder extends Component{
             })
         })
         .catch((error) =>{
-            console.error(error);
+            this.refs.toast.show('订单信息获取失败',1000);
         })
     }
 
@@ -360,7 +368,7 @@ export default class ConfirmOrder extends Component{
             })
         })
         .catch((error) =>{
-            console.error(error);
+            this.refs.toast.show('订单信息获取失败',1000);
         })
     }
 
@@ -401,19 +409,17 @@ export default class ConfirmOrder extends Component{
         .then((response) => response.json())
         .then((responseJson) => {
             if(responseJson.respCode !== 'S'){
-                Alert.alert(
-                    '温馨提示',
-                    responseJson.errorMsg+'',
-                    [{text: '确定'}],
-                    {cancelable:true}
-                )
+                this.refs.toast.show(responseJson.errorMsg,1500);
             }else {
-                //替换路由到订单路由
-                this.props.navigation.replace('AppOrderNavigator')
+                this.refs.toast.show('恭喜，下单成功！您可以通过全部订单查看您的订单详情',1400);
+                setTimeout(() => {
+                    //替换路由到订单路由
+                    this.props.navigation.replace('AppOrderNavigator')
+                }, 1500);
             }
         })
         .catch((error) =>{
-            alert('服务错误，下单失败！');
+            this.refs.toast.show('服务错误，下单失败！',1500);
         })
     }
 }

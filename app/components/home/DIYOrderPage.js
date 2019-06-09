@@ -51,14 +51,14 @@ export default class DIYOrderPage extends Component{
                         style={styles.input}
                         value={this.state.brand}
                         onChangeText={(name) => this.getBrandList(name)}
-                        placeholder="请输入品牌名">
+                        placeholder="  请输入品牌名">
                     </TextInput>
                     <View style={styles.view}>
-                        <Text style={styles.input2}>{' '+this.state.name}</Text>
+                        <Text style={styles.input2}>{"  "+this.state.name}</Text>
                         <TextInput
                             style={styles.input3}
                             onChangeText={(specification) => this.setState({specification})}
-                            placeholder="请输入规则参数">
+                            placeholder="  请输入规格参数">
                         </TextInput>
                     </View>
                     <TouchableOpacity

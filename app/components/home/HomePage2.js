@@ -82,6 +82,10 @@ export default class HomePage extends Component {
         });
     }
 
+    componentWillUnmount(): void {
+        this._navListener.remove();
+    }
+
     /**
      * 通过热更新服务检查更新。
      * 安装包更新提示，否则进行静默更新
@@ -224,7 +228,7 @@ export default class HomePage extends Component {
                     <TouchableOpacity
                         activeOpacity={0.8}
                         style={styles.top_bar_search}
-                        onPress={() => this.props.navigation.navigate('SearchGoodsPage', {name: null, type: 1})}>
+                        onPress={() => this.props.navigation.navigate('SearchGoodsPage', {type: 1})}>
                         <Image style={{width: 30, height: 30}} source={require('../../img/search_icon.png')}/>
                         <Text>搜索商品</Text>
                     </TouchableOpacity>
@@ -272,7 +276,7 @@ export default class HomePage extends Component {
         .then((response) => response.json())
         .then((responseJson) => {
             if (responseJson.respCode === 'S') {
-                //获取版本号 ToDo
+                //获取版本号
                 NativeModules.DeviceHelperModule.getAppVersion((version) =>
                     this.updateTip(version, responseJson.data)
                 )
@@ -326,9 +330,9 @@ export default class HomePage extends Component {
         .then((response) => response.json())
         .then((responseJson) => {
             if(responseJson.respCode !== 'S'){
-                if(responseJson.errorCode === '1915'){
+                if(responseJson.errorCode+'' === '1915'){
                     this.refs.EmptyAddressModal.setAddressModal(true);
-                }else if(responseJson.errorCode === '1906'){
+                }else if(responseJson.errorCode+'' === '1906'){
                     asyncStorageUtil.putLocalData("accessToken","");
                     this.props.navigation.navigate('AppAuthNavigator')
                 }

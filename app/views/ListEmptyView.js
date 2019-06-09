@@ -1,11 +1,10 @@
 import React,{Component} from 'react';
 import {View,Text} from 'react-native';
 
-
 /**
- * listview空白提示
+ * ListView空白提示
  */
-export  default class ListEmptyView extends Component{
+export default class ListEmptyView extends Component{
 
     render(): React.ReactNode {
         return (

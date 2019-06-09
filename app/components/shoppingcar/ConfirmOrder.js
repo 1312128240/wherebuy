@@ -14,13 +14,12 @@ import {
 import {HTTP_REQUEST} from "../../utils/config";
 import asyncStorageUtil from "../../utils/AsyncStorageUtil";
 import {dateToString} from '../../utils/dateUtil'
-import BaseComponent from "../../views/BaseComponent";
 const {width,height} = Dimensions.get('window');
 
 /**
  * 订单确认页面 2019年4月17日
  */
-export default class ConfirmOrder extends BaseComponent{
+export default class ConfirmOrder extends Component{
 
     constructor(props) {
         super(props);
@@ -35,15 +34,19 @@ export default class ConfirmOrder extends BaseComponent{
     }
 
     componentDidMount(){
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,
             },()=>{
                 this.getDefaultReceiveAddress();
-                this.getOrderInfo();
+                let goodsSkuId = this.props.navigation.state.params.goodsSkuId;
+                let quantity = this.props.navigation.state.params.quantity;
+                if(goodsSkuId !== ''){
+                    this.getDirectOrderInfo(goodsSkuId,quantity)
+                }else {
+                    this.getOrderInfo();
+                }
             });
-
         });
     }
 
@@ -122,13 +125,24 @@ export default class ConfirmOrder extends BaseComponent{
             <View>
                 <Text style={styles.top_tip}>为保证订单准确送达，请确认收货信息</Text>
                 <View style={styles.receiver_view}>
-                    <Text style={styles.receiver_name}>收货人：{this.state.addressData.receiverName}</Text>
-                    <Text style={styles.receiver_phone}>{this.state.addressData.mobile}</Text>
-                    <Text style={styles.receiver_address}>
-                        {this.state.addressData.areaName}{this.state.addressData.smallName}{this.state.addressData.addressTwo}
+                    <Text
+                        style={styles.receiver_name}>
+                        收货人：{this.state.addressData.receiverName}
+                        {this.state.addressData.sex === 'FEMALE'?'（女士）':'（先生）'}
                     </Text>
-                    <Image style={styles.receiver_location_img} source={require('../../img/location_yellow.png')}/>
-                    <Image style={styles.receiver_enter_img} source={{uri:"http://qnm.laykj.cn/image/member_more.png"}}/>
+                    <Text
+                        style={styles.receiver_phone}>
+                        {this.state.addressData.mobile}
+                    </Text>
+                    <Text
+                        style={styles.receiver_address}>
+                        {this.state.addressData.areaName}
+                        {this.state.addressData.smallName}
+                        {this.state.addressData.addressTwo}
+                    </Text>
+                    <Image
+                        style={styles.receiver_location_img}
+                        source={require('../../img/location_yellow.png')}/>
                 </View>
                 <TouchableOpacity
                     style={styles.pay_view}
@@ -136,7 +150,9 @@ export default class ConfirmOrder extends BaseComponent{
                     onPress={() => {this.setModalVisible(true)}}>
                     <Text style={styles.pay_tip}>商品货到付款：</Text>
                     <Text style={styles.pay_way}>{this.state.pay}</Text>
-                    <Image style={styles.pay_way_enter_img} source={require('../../img/icon_arrows_right.png')}/>
+                    <Image
+                        style={styles.pay_way_enter_img}
+                        source={require('../../img/icon_arrows_right.png')}/>
                 </TouchableOpacity>
             </View>
         );
@@ -321,6 +337,33 @@ export default class ConfirmOrder extends BaseComponent{
         })
     }
 
+    //获取直接下单订单信息
+    getDirectOrderInfo(goodsSkuId,quantity){
+        fetch(HTTP_REQUEST.Host + '/goods/goods/goodsDirectOrder.do',{
+            method: 'POST',
+            headers: {
+                'Content-Type': HTTP_REQUEST.contentType,
+                'accessToken':this.state.accessToken
+            },
+            body: JSON.stringify({
+                "goodsSkuId":goodsSkuId,
+                "quantity":quantity
+            }),
+        })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            if(responseJson.data == null || responseJson.respCode !== 'S'){
+                return;
+            }
+            this.setState({
+                orderData:responseJson.data
+            })
+        })
+        .catch((error) =>{
+            console.error(error);
+        })
+    }
+
     //提交订单
     submitOrder(){
         let pay = this.state.pay;//获取支付方式
@@ -350,7 +393,9 @@ export default class ConfirmOrder extends BaseComponent{
                 "extraFee": this.state.orderData.additionalFees,
                 "remark": this.state.remarks,
                 "amount": this.state.orderData.totalPrice,
-                "pay": pay
+                "pay": pay,
+                'goodsSkuId': this.props.navigation.state.params.goodsSkuId,
+                'quantity': this.props.navigation.state.params.quantity
             }),
         })
         .then((response) => response.json())
@@ -402,7 +447,7 @@ const styles = StyleSheet.create({
     receiver_address: {
         position:'absolute',
         left:50,
-        right:50,
+        right:10,
         top:40
     },
     receiver_location_img: {
@@ -410,14 +455,6 @@ const styles = StyleSheet.create({
         left:10,
         width:30,
         height:30,
-        top:35,
-        resizeMode:'contain'
-    },
-    receiver_enter_img: {
-        position:'absolute',
-        right:10,
-        width:15,
-        height:15,
         top:35,
         resizeMode:'contain'
     },

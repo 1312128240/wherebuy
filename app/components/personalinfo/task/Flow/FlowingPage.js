@@ -4,12 +4,11 @@ import  RefreshListView,{RefreshState} from 'react-native-refresh-list-view'
 import Toast from 'react-native-easy-toast'
 import {HTTP_REQUEST,} from "../../../../utils/config";
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import ListEmptyView from "../../../../views/ListEmptyView";
 /**
  * 流转中心进行中
  */
-export default class FlowingPage extends BaseComponent{
+export default class FlowingPage extends Component{
 
     constructor(props){
         super(props);
@@ -24,7 +23,6 @@ export default class FlowingPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             asyncStorageUtil.getLocalData("accessToken").then(data=>{
                 this.setState({

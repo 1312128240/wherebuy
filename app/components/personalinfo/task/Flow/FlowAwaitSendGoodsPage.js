@@ -5,13 +5,12 @@ import Toast from 'react-native-easy-toast'
 import RefreshListView,{RefreshState} from "react-native-refresh-list-view";
 import {HTTP_REQUEST,} from "../../../../utils/config";
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import ListEmptyView from "../../../../views/ListEmptyView";
 
 /**
  * 流转中心待发货
  */
-export  default class FlowAwaitSendGoodsPage extends BaseComponent{
+export  default class FlowAwaitSendGoodsPage extends Component{
 
     constructor(props){
         super(props);
@@ -82,7 +81,6 @@ export  default class FlowAwaitSendGoodsPage extends BaseComponent{
 
 
     componentDidMount(): void {
-        super.componentDidMount();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             asyncStorageUtil.getLocalData("accessToken").then(data=>{
                 this.setState({

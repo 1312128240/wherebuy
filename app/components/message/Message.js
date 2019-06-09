@@ -44,6 +44,10 @@ export default class Message extends Component {
         });
     }
 
+    componentWillUnmount(): void {
+        this._navListener.remove();
+    }
+
     render() {
         if(this.state.item_data.length === 0){
             return (

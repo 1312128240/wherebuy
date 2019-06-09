@@ -14,7 +14,6 @@ import {
 /**
  * APP主屏页面导航
  */
-//import HomePage from './components/home/HomePage';
 import HomePage2 from './components/home/HomePage2';
 import MessagePage from './components/message/Message';
 import ShoppingCarPage from './components/shoppingcar/ShoppingCar';
@@ -42,6 +41,8 @@ import MyTaskPage from './components/personalinfo/MyTaskPage';//我的任务
 import ApplyingForCertificatePage from './components/personalinfo/ApplyingForCertificatePage';//申请认证
 import AddressPage from "./components/personalinfo/address/MyAddressPage";//我的地址
 import CreateAddressPage from './components/personalinfo/address/CreateAddressPage'//新增地址
+import AddressSearchPage from './views/AddressSearchPage'//选择你的地址，地址搜索页
+import SuperMarketSearchPage from './views/SuperMarketSearchPage'//超市搜索页
 import OrderDetails from './components/personalinfo/order/OrderDetails';//订单详情
 import ApplyingForBuyerPage from './components/personalinfo/apply/ApplyingForBuyerPage';//申请成为采买员
 import ApplyingForDeliverymanPage from './components/personalinfo/apply/ApplyingForDeliverymanPage';//申请成为配送员
@@ -63,11 +64,11 @@ import {FlowTopBarNavigator} from './components/personalinfo/task/Flow/FlowPage'
 import InformationSharePage from './components/personalinfo/task/InformationShare/InformationSharePage'//信息分享
 import DeliveryDetails from './components/personalinfo/task/Delivery/DeliveryDetailsPage'//配送详情
 import MyWhereBuyMainPage from './components/personalinfo/my/MyWhereBuyMainPage'//我的去哪买首页
-//import InviteVIP from './components/personalinfo/my/InviteVIP'//邀请成为会员
 import VIPIntroduce from './components/personalinfo/my/VIPIntroduce'//会员规则介绍页
 import InviteVIPPhone from './components/personalinfo/my/InviteVIPPhone'//邀请会员，输入会员手机号码进行验证
 import WriteInformationPage from './components/personalinfo/my/WriteInformationPage' //申请会员填写资料
 import AddCustomerAddrPage from './components/personalinfo/my/HelpOrder/AddCustomerAddrPage' //代顾客下单填写顾客资料
+import ModificationCustomerAddrPage from './components/personalinfo/my/HelpOrder/ModificationCustomerAddrPage' //修改代顾客下单的顾客资料
 import OpenVipPage from './components/personalinfo/my/OpenVipPage'//开通会员
 import HelpOrderPage from './components/personalinfo/my/HelpOrder/HelpOrderPage' //代顾客下单
 import MyTeamPartOrderPage from './components/personalinfo/my/MyTeam/MyTeamPartOrderPage' //我的团队下单员
@@ -81,18 +82,6 @@ import RegistrationPage from './components/auth/RegistrationPage';//用户注册
 
 //APP主屏底部导航
 const AppBottomNavigator = createBottomTabNavigator({
-    // HomePage:{
-    //     screen:HomePage,
-    //     navigationOptions: {
-    //         tabBarLabel: '首页',
-    //         tabBarIcon:({focused}) => (
-    //             focused ?
-    //              <Image style={{width:25,height:25}} source={require('./img/home_page_s.png')}/>
-    //              :
-    //              <Image style={{width:25,height:25}} source={require('./img/home_page_n.png')}/>
-    //          )
-    //     }
-    // },
     HomePage2:{
         screen:HomePage2,
         navigationOptions: {
@@ -296,7 +285,7 @@ const AppStackNavigator = createStackNavigator({
     CreateAddressPage:{
         screen:CreateAddressPage,
         navigationOptions: {
-            headerTitle:"新增收货地址",
+            headerTitle:"填写您的地址",
             headerTitleStyle: {flex:1,textAlign:'center'},
             headerRight:(<View/>)
         }
@@ -452,10 +441,6 @@ const AppStackNavigator = createStackNavigator({
             header: null,
         }
     },
-    // InviteVIP:{
-    //     screen:InviteVIP,
-    //     navigationOptions: null
-    // },
     VIPIntroduce:{
         screen:VIPIntroduce,
         navigationOptions: {
@@ -483,6 +468,10 @@ const AppStackNavigator = createStackNavigator({
             headerTitleStyle: {flex:1,textAlign:'center'},
             headerRight:(<View/>)
         }
+    },
+    ModificationCustomerAddrPage:{
+        screen:ModificationCustomerAddrPage,
+        navigationOptions: null
     },
     OpenVip:{
         screen:OpenVipPage,
@@ -551,7 +540,23 @@ const AppStackNavigator = createStackNavigator({
     DIYOrderPage:{
         screen:DIYOrderPage,
         navigationOptions: {
-            headerTitle:"获取报价",
+            headerTitle:"自定义下单",
+            headerTitleStyle: {flex:1,textAlign:'center'},
+            headerRight:(<View/>)
+        }
+    },
+    AddressSearchPage:{
+        screen:AddressSearchPage,
+        navigationOptions: {
+            headerTitle:"选择您的地址",
+            headerTitleStyle: {flex:1,textAlign:'center'},
+            headerRight:(<View/>)
+        }
+    },
+    SuperMarketSearchPage:{
+        screen:SuperMarketSearchPage,
+        navigationOptions: {
+            headerTitle:"选择超市",
             headerTitleStyle: {flex:1,textAlign:'center'},
             headerRight:(<View/>)
         }

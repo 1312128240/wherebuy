@@ -11,9 +11,8 @@ import RefreshListView,{RefreshState} from 'react-native-refresh-list-view'
 import {HTTP_REQUEST} from "../../../../utils/config";
 import AsyncStorageUtil from "../../../../utils/AsyncStorageUtil";
 import Toast  from 'react-native-easy-toast'
-import BaseComponent from "../../../../views/BaseComponent";
 
-export default class MyTeamMemberPage extends BaseComponent{
+export default class MyTeamMemberPage extends Component{
 
     constructor(props){
         super(props);
@@ -27,7 +26,6 @@ export default class MyTeamMemberPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         AsyncStorageUtil.getLocalData("accessToken").then(data => {
             this.setState({
                 accessToken: data,

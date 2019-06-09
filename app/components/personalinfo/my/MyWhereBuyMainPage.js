@@ -136,7 +136,7 @@ export default class MyWhereBuyMainPage extends Component{
         }else if(this.state.dataBean.identity === "COMMUNITY") {
             return "服务商"
         }else if(this.state.dataBean.identity === 'ORDER_MAN'){
-            return "下单员"
+            return "家庭服务师"
         }
     }
 
@@ -147,7 +147,7 @@ export default class MyWhereBuyMainPage extends Component{
         }else if(this.state.dataBean.identity === "COMMUNITY") {
             return "我是服务商"
         }else if(this.state.dataBean.identity === 'ORDER_MAN') {
-            return "我是下单员"
+            return "我是家庭服务师"
         }
     }
 

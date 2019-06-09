@@ -3,13 +3,11 @@ import {View,Text,Image,Dimensions,StyleSheet,TouchableOpacity,ScrollView,Linkin
 import {HTTP_REQUEST,} from "../../../../utils/config";
 import {dateToString} from '../../../../utils/dateUtil'
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
-
 
 /**
  * 配送详情
  */
-export  default class DeliveryDetailsPage extends BaseComponent{
+export  default class DeliveryDetailsPage extends Component{
 
 
     static navigationOptions = ({navigation, screenProps}) => ({
@@ -47,7 +45,6 @@ export  default class DeliveryDetailsPage extends BaseComponent{
     }
 
     componentDidMount() {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,

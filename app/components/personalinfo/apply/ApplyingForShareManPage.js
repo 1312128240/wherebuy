@@ -14,7 +14,6 @@ import ImagePicker from "react-native-image-crop-picker";
 import {HTTP_REQUEST} from "../../../utils/config";
 import ApplySucceedModal from './ApplySucceedModal'
 import asyncStorageUtil from "../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../views/BaseComponent";
 import Loading from '../../../views/LoadingModal';
 
 const {width} = Dimensions.get('window');
@@ -22,7 +21,7 @@ const {width} = Dimensions.get('window');
 /**
  * 申请成为分享员
  */
-export default class ApplyingForShareManPage extends BaseComponent{
+export default class ApplyingForShareManPage extends Component{
 
     constructor(props) {
         super(props);
@@ -38,7 +37,6 @@ export default class ApplyingForShareManPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData('accessToken').then(data=>{
             this.setState({accessToken:data})
         });

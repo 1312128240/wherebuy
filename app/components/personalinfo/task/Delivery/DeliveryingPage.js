@@ -4,13 +4,12 @@ import {HTTP_REQUEST,} from "../../../../utils/config";
 import RefreshListView,{RefreshState} from "react-native-refresh-list-view";
 import Toast from 'react-native-easy-toast';
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import ListEmptyView from "../../../../views/ListEmptyView";
 
 /**
  * 配送任务进行中
  */
-export  default  class DeliveryingPage extends BaseComponent{
+export  default  class DeliveryingPage extends Component{
 
 
     constructor(props){
@@ -25,7 +24,6 @@ export  default  class DeliveryingPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             if (data === '') {
                 this.props.navigation.navigate('AppAuthNavigator')

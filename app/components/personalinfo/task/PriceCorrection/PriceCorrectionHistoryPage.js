@@ -17,14 +17,13 @@ import RefreshListView,{RefreshState} from "react-native-refresh-list-view";
 import Toast from "react-native-easy-toast";
 import {dateToString} from '../../../../utils/dateUtil'
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 /**
  * 分享价格纠错历史记录
  */
 
 const  w=Dimensions.get('window').width;
 
-export default class PriceCorrectionHistoryPage extends BaseComponent{
+export default class PriceCorrectionHistoryPage extends Component{
 
     constructor(){
         super();
@@ -58,7 +57,6 @@ export default class PriceCorrectionHistoryPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,

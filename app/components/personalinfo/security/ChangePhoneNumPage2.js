@@ -2,12 +2,10 @@
 import React ,{Component}from 'react'
 import {View,Text,TextInput,TouchableOpacity,Dimensions,StyleSheet} from 'react-native'
 import  Toast from 'react-native-easy-toast'
-import BaseComponent from "../../../views/BaseComponent";
-
 
 let w=Dimensions.get('window').width;
 
-export default class ChangePhoneNumPage2 extends BaseComponent{
+export default class ChangePhoneNumPage2 extends Component{
 
      constructor(){
          super();

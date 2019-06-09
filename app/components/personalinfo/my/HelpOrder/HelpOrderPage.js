@@ -9,15 +9,15 @@ import {
 } from 'react-native';
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
 import {HTTP_REQUEST} from "../../../../utils/config";
-import BaseComponent from "../../../../views/BaseComponent";
 import RefreshListView,{RefreshState} from "react-native-refresh-list-view";
-const {width} = Dimensions.get('window');
 import Toast from "react-native-easy-toast";
+
+const {width} = Dimensions.get('window');
 
 /**
  * 代顾客下单
  */
-export default class HelpOrderPage extends BaseComponent {
+export default class HelpOrderPage extends Component {
 
     constructor(props) {
         super(props);
@@ -33,7 +33,6 @@ export default class HelpOrderPage extends BaseComponent {
     }
 
     componentDidMount(){
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,
@@ -66,12 +65,24 @@ export default class HelpOrderPage extends BaseComponent {
         }
     };
 
+    //type:1 新增顾客地址
     addCustomerAddr = () => {
         this.props.navigation.navigate('AddCustomerAddrPage', {
             update: () => {
                 this.getStatisticalOrder();
                 this.getCustomerAddressList();
             },
+        })
+    };
+
+    //type:2 修改顾客地址
+    modificationCustomerAddr = (receiveAddressId) => {
+        this.props.navigation.navigate('ModificationCustomerAddrPage', {
+            update: () => {
+                this.getStatisticalOrder();
+                this.getCustomerAddressList();
+            },
+            receiveAddressId:receiveAddressId,
         })
     };
 
@@ -166,13 +177,20 @@ export default class HelpOrderPage extends BaseComponent {
 
     renderListItem({item}){
         return(
-            <View style={{width:width,height:150,backgroundColor:'white',marginBottom:10}}>
-                <Text style={{position:'absolute', left:10, top:10,fontSize:16,fontWeight:'bold'}}>{item.receiverName}</Text>
+            <TouchableOpacity
+                activeOpacity={0.7}
+                style={{width:width,height:150,backgroundColor:'white',marginBottom:10}}
+                onPress={()=> this.modificationCustomerAddr(item.receiveAddressId)}>
+                <Text
+                    style={{position:'absolute', left:10, top:10,fontSize:16,fontWeight:'bold'}}>
+                    {item.receiverName}
+                    {item.sex === 'FEMALE'?'（女士）':'（先生）'}
+                </Text>
                 <Text style={{position:'absolute', right:50, top:10,fontSize:16,fontWeight:'bold'}}>{item.mobile}</Text>
                 <Text style={{position:'absolute', left:10,right:10, top:35}}>{item.addressTwo}</Text>
-                <Text style={{position:'absolute', left:10, top:60,fontSize:14}}>累计下单数: {item.numberOfOrders}</Text>
-                <Text style={{position:'absolute', right:50, top:60,fontSize:14}}>累计下单金额: {(item.totalSum)/100}</Text>
-                <View style={{position:'absolute',width:width,height:60,bottom:0,flexDirection:'row',borderColor:'grey',borderTopWidth:0.5}}>
+                <Text style={{position:'absolute', left:10, top:70,fontSize:14}}>累计下单数: {item.numberOfOrders}</Text>
+                <Text style={{position:'absolute', right:50, top:70,fontSize:14}}>累计下单金额: {(item.totalSum)/100}</Text>
+                <View style={{position:'absolute',width:width,height:50,bottom:0,flexDirection:'row',borderColor:'grey',borderTopWidth:0.5}}>
                     <TouchableOpacity
                         activeOpacity={0.7}
                         onPress={()=>this.props.navigation.navigate('MyTeamOrderListPage',{memberId:null,receiveAddressId:item.receiveAddressId})}
@@ -192,7 +210,7 @@ export default class HelpOrderPage extends BaseComponent {
                         <Text style={{fontSize:16,marginLeft: 5}}>下单</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </TouchableOpacity>
         )
     }
 

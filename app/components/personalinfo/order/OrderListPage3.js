@@ -4,8 +4,6 @@ import {HTTP_REQUEST} from "../../../utils/config"
 import  RefreshListView,{RefreshState} from "react-native-refresh-list-view";
 import Toast,{DURATION} from 'react-native-easy-toast';
 import asyncStorageUtil from "../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../views/BaseComponent";
-
 
 //屏幕的宽高
 let w=Dimensions.get('window').width;
@@ -14,7 +12,7 @@ let h=Dimensions.get('window').height;
 /**
  * 进行中的订单
  */
-export default class OrderListPage3 extends BaseComponent {
+export default class OrderListPage3 extends Component {
 
     constructor(props) {
         super(props);
@@ -29,7 +27,6 @@ export default class OrderListPage3 extends BaseComponent {
     }
 
     componentDidMount(): void {
-       super.componentDidMount();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             asyncStorageUtil.getLocalData("accessToken").then(data=>{
                 this.setState({

@@ -5,17 +5,16 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Dimensions, Modal
+    Dimensions,
 } from 'react-native';
 import Toast from "react-native-easy-toast";
-import BaseComponent from "../../../views/BaseComponent";
 
 const {width} = Dimensions.get('window');
 
 /**
  * 修改手机号
  */
-export default class ChangePhoneNumPage extends BaseComponent{
+export default class ChangePhoneNumPage extends Component{
 
     constructor(props) {
         super(props);

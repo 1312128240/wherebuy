@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
-import {Image,StyleSheet,View,Dimensions,TouchableOpacity,Text,FlatList} from 'react-native';
-import BaseComponent from "../../views/BaseComponent";
+import {
+    Image,
+    StyleSheet,
+    View,
+    Dimensions,
+    TouchableOpacity,
+    Text,
+    FlatList
+} from 'react-native';
 
 const {width} = Dimensions.get('window');
-
 const item_data=[
   {key:"1",value: 'ChangePhoneNumPage',tip:'修改手机号'},
   {key:"2",value: 'ChangePWDPage',tip:'设置登录密码'},
@@ -13,7 +19,7 @@ const item_data=[
 /**
  * 账户安全设置
  */
-export default class AccountSecurityPage extends BaseComponent{
+export default class AccountSecurityPage extends Component{
   
   constructor(props) {
     super(props);
@@ -34,7 +40,10 @@ export default class AccountSecurityPage extends BaseComponent{
 
   renderView({item}) {
     return (
-      <TouchableOpacity style={styles.task_item} onPress={() => this.props.navigation.navigate(item.value)}>
+      <TouchableOpacity
+          style={styles.task_item}
+          //onPress={() => this.props.navigation.navigate(item.value)}
+          >
           <Text style={styles.task_text}>{item.tip}</Text>
           <Image style={styles.task_icon} source={{uri:"http://qnm.laykj.cn/image/member_more.png"}}/>
       </TouchableOpacity>

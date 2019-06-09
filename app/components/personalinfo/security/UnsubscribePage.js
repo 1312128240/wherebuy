@@ -8,14 +8,13 @@ import {
     Modal,
 } from 'react-native';
 import {RadioGroup, RadioButton} from 'react-native-flexi-radio-button'
-import BaseComponent from "../../../views/BaseComponent";
 
 const  w=Dimensions.get('window').width;
 const h=Dimensions.get('window').height;
 /**
  * 注销账户
  */
-export default class UnsubscribePage extends BaseComponent {
+export default class UnsubscribePage extends Component {
 
     constructor(props) {
         super(props);

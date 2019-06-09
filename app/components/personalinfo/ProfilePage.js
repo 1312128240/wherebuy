@@ -5,31 +5,30 @@ import {
     View,
     Dimensions,
     TouchableOpacity,
-    Text,
+    Text, Alert,
 } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import asyncStorageUtil from "../../utils/AsyncStorageUtil";
 import {HTTP_REQUEST, SAVE_USER_INFO} from "../../utils/config";
 import Toast from 'react-native-easy-toast';
-import BaseComponent from "../../views/BaseComponent";
 
 const {width} = Dimensions.get('window');
 
 /**
  * 个人信息页面
  */
-export default class ProfilePage extends BaseComponent {
+export default class ProfilePage extends Component {
 
-    constructor(props) {
-    super(props);
-    this.state = {
-        accessToken:'',
-        headImage:'http://192.168.0.6/image/woyaozai.jpg',
-        nickname: '',
-        birthday:'',
-        sex:'',
-    };
-    this.openPic.bind(this);
+  constructor(props) {
+      super(props);
+      this.state = {
+          accessToken:'',
+          headImage:'http://192.168.0.6/image/woyaozai.jpg',
+          nickname: '',
+          birthday:'',
+          sex:'',
+      };
+      this.openPic.bind(this);
   }
 
   componentWillUnmount(){
@@ -39,14 +38,13 @@ export default class ProfilePage extends BaseComponent {
   }
 
   componentDidMount(){
-     super.componentDidMount();
       if(this.props.navigation.state.params.userInfo != null){
         let userInfo = JSON.parse(this.props.navigation.state.params.userInfo);
         this.setState({
             headImage:userInfo.headImage,
             nickname:userInfo.nickname,
             birthday:userInfo.birthday,
-            sex:userInfo.sex=='MALE'?'男':'女',
+            sex:userInfo.sex === 'MALE'?'男':'女',
         });
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({accessToken: data,});
@@ -77,14 +75,13 @@ export default class ProfilePage extends BaseComponent {
              <Text style={styles.profile_item_value}>{this.state.sex}</Text>
              <Image style={styles.enter_icon} source={{uri:"http://qnm.laykj.cn/image/member_more.png"}}/>
           </TouchableOpacity>
-
-            <Toast
-                ref="toast"
-                style={{backgroundColor:'gray'}}
-                position='bottom'
-                positionValue={300}
-                textStyle={{color:'white'}}
-            />
+          <Toast
+              ref="toast"
+              style={{backgroundColor:'gray'}}
+              position='bottom'
+              positionValue={300}
+              textStyle={{color:'white'}}
+          />
         </View>
     );
   }
@@ -144,14 +141,22 @@ export default class ProfilePage extends BaseComponent {
       })
       .then((response) => response.json())
       .then((responseJson) => {
-         // alert("头像更新成功！");
-          this.refs.toast.show("头像更新成功！",1000)
-          this.setState({
-              headImage:responseJson.data.headImage,
-          });
+          if(responseJson.respCode !== 'S'){
+              Alert.alert(
+                  '温馨提示',
+                  responseJson.errorMsg+'',
+                  [{text: '确定'}],
+                  {cancelable:true}
+              )
+          }else {
+              this.refs.toast.show("头像更新成功！",1000);
+              this.setState({
+                  headImage:responseJson.data.headImage,
+              });
+          }
       })
       .catch((error) =>{
-          console.error(error);
+          this.refs.toast.show("网络错误，更新失败！",1000);
       })
   }
 }

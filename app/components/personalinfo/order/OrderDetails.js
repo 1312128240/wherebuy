@@ -4,15 +4,14 @@ import {HTTP_REQUEST} from "../../../utils/config";
 import asyncStorageUtil from "../../../utils/AsyncStorageUtil";
 import  {dateToString} from '../../../utils/dateUtil'
 import Toast from 'react-native-easy-toast'
-import BaseComponent from "../../../views/BaseComponent";
-import {RefreshState} from "react-native-refresh-list-view";
+
 const w = Dimensions.get('window').width;
 
 
 /**
  * 订单详情
  */
-export  default class OrderDetails extends BaseComponent{
+export  default class OrderDetails extends Component{
 
     constructor(props) {
         super(props);
@@ -26,7 +25,6 @@ export  default class OrderDetails extends BaseComponent{
     }
 
     componentDidMount() {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,
@@ -112,7 +110,11 @@ export  default class OrderDetails extends BaseComponent{
 
                     <View style={{width:w-70}}>
                         <View style={{flexDirection: 'row',}}>
-                            <Text style={styles.tv}>收货人: {this.state.detailsBean.receiverName}</Text>
+                            <Text
+                                style={styles.tv}>
+                                收货人: {this.state.detailsBean.receiverName}
+                                {this.state.detailsBean.sex === 'FEMALE'?'（女士）':'（先生）'}
+                            </Text>
                             <View style={{width: 30}}></View>
                             <Text style={styles.tv}>电话号码: {this.state.detailsBean.mobile}</Text>
                         </View>

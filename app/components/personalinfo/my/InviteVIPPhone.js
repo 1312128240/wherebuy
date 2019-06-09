@@ -10,14 +10,13 @@ import {
 import {HTTP_REQUEST} from "../../../utils/config";
 import Toast from 'react-native-easy-toast'
 import asyncStorageUtil from "../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../views/BaseComponent";
 
 const {width} = Dimensions.get('window');
 
 /**
  * 邀请会员，输入手机号码验证
  */
-export default class InviteVIPPhone extends BaseComponent {
+export default class InviteVIPPhone extends Component {
 
     constructor(props) {
         super(props);
@@ -30,7 +29,6 @@ export default class InviteVIPPhone extends BaseComponent {
     }
 
     componentDidMount(){
-        super.componentDidMount();
         this.props.navigation.setParams({navigatePress:this._submit});
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({

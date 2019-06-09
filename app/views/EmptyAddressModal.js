@@ -1,13 +1,25 @@
 import React,{Component} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet,Dimensions, Modal} from 'react-native';
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    Dimensions,
+    Modal
+} from 'react-native';
 
+const width = Dimensions.get('window').width;
+
+/**
+ * 默认收货地址为空时，强制提示设置。
+ */
 export default class EmptyAddressModal extends Component{
 
     constructor(props){
         super(props);
         this.state={
             addressVisible:false,
-            navis:props.params,
+            navigate:props.params,
         }
     }
 
@@ -40,22 +52,17 @@ export default class EmptyAddressModal extends Component{
     //去选择地址
     goAddressPage(){
         this.setAddressModal(false);
-        this.state.navis.navigate('MyAddressPage');
+        this.state.navigate.navigate('MyAddressPage');
     }
-
 }
-const width=Dimensions.get('window').width;
 
-
-const styles=StyleSheet.create({
-
+const styles = StyleSheet.create({
     modalView:{
         width:width-140,
         borderRadius:3,
         backgroundColor:'#FFF',
         alignItems:'center',
     },
-
     addressModalBtn:{
         height:55,
         width:width-140,
@@ -64,4 +71,4 @@ const styles=StyleSheet.create({
         borderTopColor:'#D9D9D9',
         borderTopWidth:0.5
     }
-})
+});

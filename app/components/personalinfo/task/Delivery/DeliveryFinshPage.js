@@ -5,14 +5,13 @@ import RefreshListView, {RefreshState} from 'react-native-refresh-list-view'
 import {dateToString} from '../../../../utils/dateUtil';
 import Toast from 'react-native-easy-toast';
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import ListEmptyView from "../../../../views/ListEmptyView";
 
 
 /**
  * 已完成的配送
  */
-export default class DeliveryFinshPage extends BaseComponent{
+export default class DeliveryFinshPage extends Component{
 
     constructor(props) {
         super(props);
@@ -41,7 +40,6 @@ export default class DeliveryFinshPage extends BaseComponent{
 
 
     componentDidMount(): void {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,

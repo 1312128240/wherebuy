@@ -9,8 +9,6 @@ import {
 } from 'react-native';
 
 import Toast,{DURATION} from 'react-native-easy-toast'
-import BaseComponent from "../../../views/BaseComponent";
-
 
 
 const {width} = Dimensions.get('window');
@@ -18,7 +16,7 @@ const {width} = Dimensions.get('window');
 /**
  * 修改密码
  */
-export default class ChangePWDPage extends BaseComponent {
+export default class ChangePWDPage extends Component {
 
     constructor(props) {
         super(props);

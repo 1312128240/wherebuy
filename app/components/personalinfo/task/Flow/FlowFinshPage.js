@@ -6,12 +6,11 @@ import {HTTP_REQUEST,} from "../../../../utils/config";
 import Toast from "react-native-easy-toast";
 import {dateToString} from '../../../../utils/dateUtil'
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import ListEmptyView from "../../../../views/ListEmptyView";
 /**
  * 流转中心已完成
  */
-export default class FlowFinshPage extends BaseComponent{
+export default class FlowFinshPage extends Component{
 
     constructor(props){
         super(props);
@@ -67,7 +66,6 @@ export default class FlowFinshPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             asyncStorageUtil.getLocalData("accessToken").then(data=>{
                 this.setState({

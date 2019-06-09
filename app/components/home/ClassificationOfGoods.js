@@ -9,14 +9,13 @@ import {
 } from 'react-native';
 import asyncStorageUtil from "../../utils/AsyncStorageUtil";
 import {HTTP_REQUEST, GET_CATEGORY} from "../../utils/config";
-import BaseComponent from "../../views/BaseComponent";
 
 const {width,height} = Dimensions.get('window');
 
 /**
  * 商品分类页，分组展示商品类别等。
 */
-export default class ClassificationOfGoods extends BaseComponent {
+export default class ClassificationOfGoods extends Component {
 
   constructor(props) {
     super(props);
@@ -29,16 +28,14 @@ export default class ClassificationOfGoods extends BaseComponent {
   }
 
   componentDidMount(){
-      super.componentDidMount();
       asyncStorageUtil.getLocalData("accessToken").then(data=>{
-      this.setState({
-        accessToken: data,
-      },()=>{
-          this.getCategoryInfo();
-          this.getCategoryInfo2(1);
+        this.setState({
+            accessToken: data,
+        },()=>{
+            this.getCategoryInfo();
+            this.getCategoryInfo2(1);
+        });
       });
-
-    });
   }
 
   //获取左边的主列表
@@ -53,7 +50,7 @@ export default class ClassificationOfGoods extends BaseComponent {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      if(responseJson.data == null && responseJson.respCode != 'S'){
+      if(responseJson.data == null && responseJson.respCode !== 'S'){
         return;
       }
       let left_data = responseJson.data;
@@ -81,7 +78,7 @@ export default class ClassificationOfGoods extends BaseComponent {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      if(responseJson.data == null && responseJson.respCode != 'S'){
+      if(responseJson.data == null && responseJson.respCode !== 'S'){
         return;
       }
       let right_data = responseJson.data;
@@ -111,7 +108,7 @@ export default class ClassificationOfGoods extends BaseComponent {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      if(responseJson.data == null && responseJson.respCode != 'S'){
+      if(responseJson.data == null && responseJson.respCode !== 'S'){
         return;
       }
       let right_data = this.state.data_right;
@@ -211,7 +208,12 @@ export default class ClassificationOfGoods extends BaseComponent {
     return (
         <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => this.props.navigation.navigate('SearchGoodsPage',{name:item.name,type:3,categoryId:item.categoryId})}
+            onPress={() =>
+                this.props.navigation.navigate(
+                    'SearchGoodsPage',
+                    {type:3,categoryName:item.name,categoryId:item.categoryId}
+                )
+            }
             style={{width:(width*0.8)*(1/3),height:100,alignItems:'center',justifyContent:'center'}}>
             <Image style={{height:70,width:50}} source={{uri:item.logo}}/>
             <Text style={{marginTop:5}} ellipsizeMode='tail' numberOfLines={1}>{item.name}</Text>

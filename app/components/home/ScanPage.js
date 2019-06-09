@@ -125,9 +125,8 @@ export default class ScanPage extends Component{
 
     //将数据传递给商品搜索页面
     barcodeReceived(e) {
-        this.props.navigation.replace('SearchGoodsPage',{name:e.data,type:2})
+        this.props.navigation.replace('SearchGoodsPage',{type:2,code:e.data})
     }
-
 }
 
 const styles = StyleSheet.create({

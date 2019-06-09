@@ -12,14 +12,13 @@ import {
 } from 'react-native';
 import {HTTP_REQUEST,SAVE_USER_INFO} from '../../utils/config'
 import asyncStorageUtil from "../../utils/AsyncStorageUtil";
-import BaseComponent from "../../views/BaseComponent";
 
 const {width,height} = Dimensions.get('window');
 
 /**
- * 设置昵称、生日、性别 苗 2019年4月9日
+ * 设置昵称、生日、性别 2019年4月9日
  */
-export default class SetProfilePage extends BaseComponent{
+export default class SetProfilePage extends Component{
   
     constructor(props) {
       super(props);
@@ -41,8 +40,6 @@ export default class SetProfilePage extends BaseComponent{
     }
 
     componentDidMount(){
-        super.componentDidMount();
-
         let type = this.props.navigation.state.params.type;
         this.setState({type:type});
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
@@ -69,25 +66,24 @@ export default class SetProfilePage extends BaseComponent{
      * 保存设置，调用修改接口
      */
     saveChange = () => {
-        let formdata = new FormData();
+        let formData = new FormData();
         let newValue;
         if(this.state.type === 1){
             newValue = this.state.newName;
-            formdata.append("nickname",this.state.newName);
+            formData.append("nickname",this.state.newName);
         }else if(this.state.type === 2){
             newValue = this.state.newBirthday;
-            formdata.append("birthday",this.state.newBirthday);
+            formData.append("birthday",this.state.newBirthday);
         }else if(this.state.type === 3){
             newValue = this.state.newGender;
-            formdata.append("sex",this.state.newGender);
+            formData.append("sex",this.state.newGender);
         }
         fetch(HTTP_REQUEST.Host + SAVE_USER_INFO,{
             method: 'POST',
             headers: {
-                //'Content-Type': HTTP_REQUEST.contentType,
                 'accessToken':this.state.accessToken
             },
-            body: formdata
+            body: formData
         })
         .then((response) => response.json())
         .then((responseJson) => {
@@ -233,7 +229,6 @@ export default class SetProfilePage extends BaseComponent{
             );
         }
     }
-
 }
 
 const styles = StyleSheet.create({

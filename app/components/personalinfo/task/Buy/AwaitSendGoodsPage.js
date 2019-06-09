@@ -6,12 +6,11 @@ import RefreshListView,{RefreshState} from "react-native-refresh-list-view";
 import Toast from 'react-native-easy-toast'
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
 import {dateToString} from "../../../../utils/dateUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import ListEmptyView from "../../../../views/ListEmptyView";
 
 
 
-export  default class AwaitSendGoodsPage extends BaseComponent{
+export  default class AwaitSendGoodsPage extends Component{
 
     constructor(props){
         super(props);
@@ -48,7 +47,6 @@ export  default class AwaitSendGoodsPage extends BaseComponent{
 
 
     componentDidMount(): void {
-        super.componentDidMount();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             asyncStorageUtil.getLocalData("accessToken").then(data=>{
                 this.setState({

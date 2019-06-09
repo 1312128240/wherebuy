@@ -11,7 +11,6 @@ import {dateToString, getNextYear,getNextMonth} from '../../../utils/dateUtil'
 import {HTTP_REQUEST} from "../../../utils/config";
 import AsyncStorageUtil from '../../../utils/AsyncStorageUtil';
 import Toast from 'react-native-easy-toast';
-import BaseComponent from "../../../views/BaseComponent";
 
 const w = Dimensions.get('window').width;
 const membershipRule1 = '1.比价5家超市' + '\n2.配送费10元/次';
@@ -21,7 +20,7 @@ const membershipRule3 = '1.比价12家超市' + '\n2.每月免费配送20次，�
 /**
  * 开通会员
  */
-export default class OpenVipPage extends BaseComponent{
+export default class OpenVipPage extends Component{
 
     constructor(props){
         super(props);
@@ -38,7 +37,6 @@ export default class OpenVipPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         this._createList();
         AsyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({

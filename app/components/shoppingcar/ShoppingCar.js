@@ -7,7 +7,6 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
-    Alert,
 } from 'react-native';
 import {HTTP_REQUEST} from "../../utils/config";
 import asyncStorageUtil from "../../utils/AsyncStorageUtil";
@@ -20,7 +19,7 @@ const {width,height} = Dimensions.get('window');
 /**
  * 购物车页面 miao 2019年3月28日
 */
-export default class ShoppingCar extends  Component{
+export default class ShoppingCar extends Component{
 
   constructor(props) {
     super(props);
@@ -52,7 +51,6 @@ export default class ShoppingCar extends  Component{
 
   componentWillUnmount() {
       this._navListener.remove();
-      this.setState = (state, callback) => null;
   }
 
   edit(){
@@ -110,7 +108,7 @@ export default class ShoppingCar extends  Component{
           }
       }
       if(hasSelect){
-          this.props.navigation.navigate('ConfirmOrder')
+          this.props.navigation.navigate('ConfirmOrder',{goodsSkuId:'',quantity:''})
       }else {
           this.refs.toast.show('请先勾选商品',1000);
       }
@@ -271,13 +269,12 @@ export default class ShoppingCar extends  Component{
         .then((response) => response.json())
         .then((responseJson) => {
             if(responseJson.respCode !== 'S'){
-                if(responseJson.errorCode === '1915'){
+                if(responseJson.errorCode+'' === '1915'){
                     this.refs.EmptyAddressModal.setAddressModal(true);
-                }else if(responseJson.errorMsg.indexOf("accessToken失效")>-1){
+                }else if(responseJson.errorCode+'' === '1906'){
                     asyncStorageUtil.putLocalData("accessToken","");
                     this.props.navigation.navigate('AppAuthNavigator')
                 }
-
             }else {
                 this.setState({
                     receiveAddressId:responseJson.data.receiveAddressId

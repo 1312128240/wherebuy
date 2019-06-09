@@ -47,7 +47,6 @@ export default class My extends Component{
 
    componentWillUnmount(): void {
      this._navListener.remove();
-     this.setState = (state, callback) => null;
    }
 
    render() {
@@ -166,7 +165,7 @@ export default class My extends Component{
             isOrderMan:responseJson.data.isOrderMan,
           })
         }else{
-          if(responseJson.errorMsg.indexOf("accessToken失效")>-1){
+          if(responseJson.errorCode+'' === '1906'){
             asyncStorageUtil.putLocalData("accessToken","");
             this.props.navigation.navigate('AppAuthNavigator')
           }

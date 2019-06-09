@@ -11,11 +11,9 @@ import {
 } from 'react-native';
 import Toast from 'react-native-easy-toast'
 import {HTTP_REQUEST,} from "../../../utils/config";
-import AddressModal from '../../../views/AddressModal'
 import ImagePicker from 'react-native-image-crop-picker';
 import ApplySucceedModal from './ApplySucceedModal'
 import asyncStorageUtil from "../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../views/BaseComponent";
 import Loading from '../../../views/LoadingModal';
 
 const {width} = Dimensions.get('window');
@@ -23,16 +21,17 @@ const {width} = Dimensions.get('window');
 /**
  * 申请成为家庭服务师
  */
-export default class ApplyingForFamilyPage extends BaseComponent{
+export default class ApplyingForFamilyPage extends Component{
   
     constructor(props) {
         super(props);
         this.state = {
             modalVisibleSupermarket:false,
             name:'',
-            address:'请选择您的地址',
+            addressTip:'',//小区名称
+            address:'',//小区所属街道
             phone:'',
-            street_address:'',
+            street_address:'',//详细住址
             areaList:[],
             areaCode:'',
             file1:'',
@@ -44,7 +43,6 @@ export default class ApplyingForFamilyPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData('accessToken').then(data => {
             this.setState({accessToken: data})
         });
@@ -71,14 +69,31 @@ export default class ApplyingForFamilyPage extends BaseComponent{
                         placeholder="请输入您的电话">
                     </TextInput>
                 </View>
-                <View style={styles.input_view}>
-                    <Text style={styles.input_name}>小区地址：</Text>
-                    <TouchableOpacity
-                        onPress={()=>this.showAddressModal()}
-                        style={styles.input}>
-                        <Text style={styles.address_text} numberOfLines={2}>{this.state.address}</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.address_input_view}
+                    onPress={() => this.props.navigation.navigate('AddressSearchPage',{
+                        onAddressSelect: (address,fullName,smallCommunityId) => {
+                            this.setState({
+                                addressTip:address,
+                                address:fullName,
+                                areaCode:smallCommunityId
+                            })
+                        }
+                    })}>
+                    <Text style={styles.address_input_name}>收货地址:</Text>
+                    <View style={this.state.address === '' ? styles.address_input_tip_view:{width:0,height:0}}>
+                        <Image
+                            style={this.state.address === '' ? styles.address_input_tip_img : {width:0,height:0}}
+                            source={require('../../../img/location_yellow.png')}/>
+                        <Text style={styles.address_input_tip_text}>点击选择</Text>
+                    </View>
+                    <View style={this.state.address === '' ? {width:0,height:0}:styles.address_input_result_view}>
+                        <Text style={styles.address_input_result_1}>{this.state.addressTip}</Text>
+                        <Text style={styles.address_input_result_2}>{this.state.address}</Text>
+                    </View>
+                    <Image style={styles.address_input_enter_img} source={{uri:'http://qnm.laykj.cn/image/member_more.png'}}/>
+                </TouchableOpacity>
                 <View style={styles.input_view}>
                     <Text style={styles.input_name}>详细住址：</Text>
                     <TextInput
@@ -114,7 +129,6 @@ export default class ApplyingForFamilyPage extends BaseComponent{
                     <Text style={styles.confirm_text}>提交审核</Text>
                 </TouchableOpacity>
                 <ApplySucceedModal ref={'ApplySucceed'} navi={this.props.navigation}/>
-                <AddressModal ref={'AddressModal'} callback={this.addressCallback.bind(this)}/>
                 <Toast
                     ref="toast"
                     style={{backgroundColor:'gray'}}
@@ -125,27 +139,6 @@ export default class ApplyingForFamilyPage extends BaseComponent{
                 <Loading ref={'Loading'} hide = {true}/>
             </ScrollView>
         );
-    }
-
-    /**
-     *  父组件接收子组件的传值
-     *  address:详细地址字符串,
-     *  areaCode:小区的编号,
-     *  smallCommunityId：小区id
-     */
-    addressCallback(address,smallCommunityId,areaCode){
-        this.setState({
-            address:address,
-            areaCode:areaCode,
-           // smallCommunityId:smallCommunityId,
-        })
-    }
-
-    /*
-     *地址弹窗的显示
-     */
-    showAddressModal(){
-        this.refs.AddressModal.setModalVisibleAddress(true)
     }
 
     //选择图片
@@ -182,10 +175,6 @@ export default class ApplyingForFamilyPage extends BaseComponent{
           this.refs.toast.show('请选择您的地址', 1000);
           return;
       }
-      if(this.state.supermarketId === ''){
-          this.refs.toast.show('请选择采买超市', 1000);
-          return;
-      }
       if(this.state.street_address === ''){
           this.refs.toast.show('请输入您的详细地址', 1000);
           return;
@@ -209,7 +198,7 @@ export default class ApplyingForFamilyPage extends BaseComponent{
       formData.append('realName',this.state.name);
       formData.append('mobile',this.state.phone);
       formData.append('areaCode',this.state.areaCode);
-      formData.append('address',this.state.address);
+      formData.append('address',this.state.street_address);
       fetch( HTTP_REQUEST.Host+'/user/authentication/applyOrderMan.do', {
           method: 'POST',
           headers: {
@@ -233,6 +222,56 @@ export default class ApplyingForFamilyPage extends BaseComponent{
 }
 
 const styles = StyleSheet.create({
+    //地址栏的输入框
+    address_input_view:{
+        height:70,
+        alignItems:'center',
+        flexDirection:'row',
+        borderBottomColor:'#D9D9D9',
+        borderBottomWidth:0.5
+    },
+    address_input_name:{
+        fontSize:18,
+        width:100,
+        paddingLeft:10
+    },
+    address_input_tip_view:{
+        flexDirection:'row',
+        height:70,
+        alignItems:'center',
+        marginLeft:5
+    },
+    address_input_tip_img:{
+        width:25,
+        height:25,
+        resizeMode:'contain'
+    },
+    address_input_tip_text:{
+        fontSize:14,
+        color:'#999999',
+        marginLeft:5
+    },
+    address_input_result_view:{
+        flexDirection:'column',
+        height:70,
+        justifyContent:'center',
+        marginLeft:5
+    },
+    address_input_result_1:{
+        fontSize:17,
+        color:'rgba(51,51,51,1)'
+    },
+    address_input_result_2:{
+        fontSize:14
+    },
+    address_input_enter_img:{
+        position:'absolute',
+        right:10,
+        width:15,
+        height:15,
+        resizeMode:'contain'
+    },
+    //其他输入框
     input_view: {
         height:50,
         borderColor:'gray',
@@ -253,21 +292,7 @@ const styles = StyleSheet.create({
         fontSize:18,
         left:10
     },
-    address_text: {
-        height:50,
-        left:6,
-        color:'gray',
-        fontSize:14,
-        textAlignVertical:'center'
-    },
-    supermarket_text: {
-        position:'absolute',
-        left:108,
-        height:50,
-        color:'gray',
-        fontSize:14,
-        textAlignVertical:'center'
-    },
+    //提交审核按钮
     confirm_button: {
         width:width*0.9,
         height:45,
@@ -283,6 +308,7 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:"white"
     },
+    //身份证图片框
     id_card_title: {
         fontSize:18,
         marginTop:15,

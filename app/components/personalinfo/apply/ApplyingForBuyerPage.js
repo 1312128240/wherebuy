@@ -8,17 +8,12 @@ import {
     TouchableOpacity,
     Image,
     Dimensions,
-    Modal,
-    FlatList
 } from 'react-native';
 import Toast from 'react-native-easy-toast'
 import {HTTP_REQUEST,} from "../../../utils/config";
-import AddressModal from '../../../views/AddressModal'
-import AddressModalSupermarket from '../../../views/AddressModalSupermarket'
 import ImagePicker from 'react-native-image-crop-picker';
 import ApplySucceedModal from './ApplySucceedModal'
 import asyncStorageUtil from "../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../views/BaseComponent";
 import Loading from "../../../views/LoadingModal";
 
 const {width,height} = Dimensions.get('window');
@@ -26,33 +21,28 @@ const {width,height} = Dimensions.get('window');
 /**
  * 申请成为采买员
  */
-export default class ApplyingForBuyerPage extends BaseComponent{
+export default class ApplyingForBuyerPage extends Component{
   
     constructor(props) {
         super(props);
-        this.superMarketItemLayout=this.superMarketItemLayout.bind(this);
         this.state = {
-            modalVisibleSupermarket:false,
             name:'',
-            address:'请选择您的地址',
-            supermarketName:'选择地址决定超市',
+            addressTip:'',//小区名称
+            address:'',//小区所属街道
+            supermarketName:'',
             phone:'',
-            street_address:'',
+            street_address:'',//详细住址
             id_card_img_1:'http://qnm.laykj.cn/image/shangchuan.png',
             id_card_img_2:'http://qnm.laykj.cn/image/shangchuan.png',
-            areaList:[],
-            supermarketList:[],
             supermarketId:'',
             areaCode:'',
             file1:'',
             file2:'',
             accessToken:'',
-            flag:'',
         };
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData('accessToken').then(data => {
             this.setState({accessToken: data})
         });
@@ -79,14 +69,31 @@ export default class ApplyingForBuyerPage extends BaseComponent{
                     placeholder="请输入您的电话">
                 </TextInput>
             </View>
-            <View style={styles.input_view}>
-                <Text style={styles.input_name}>小区地址：</Text>
-                <TouchableOpacity
-                    onPress={()=>this.showAddressModal('1')}
-                    style={styles.input}>
-                    <Text style={styles.address_text} numberOfLines={2}>{this.state.address}</Text>
-                </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.address_input_view}
+                onPress={() => this.props.navigation.navigate('AddressSearchPage',{
+                    onAddressSelect: (address,fullName,smallCommunityId) => {
+                        this.setState({
+                            addressTip:address,
+                            address:fullName,
+                            areaCode:smallCommunityId
+                        })
+                    }
+                })}>
+                <Text style={styles.address_input_name}>收货地址:</Text>
+                <View style={this.state.address === '' ? styles.address_input_tip_view:{width:0,height:0}}>
+                    <Image
+                        style={this.state.address === '' ? styles.address_input_tip_img : {width:0,height:0}}
+                        source={require('../../../img/location_yellow.png')}/>
+                    <Text style={styles.address_input_tip_text}>点击选择</Text>
+                </View>
+                <View style={this.state.address === '' ? {width:0,height:0}:styles.address_input_result_view}>
+                    <Text style={styles.address_input_result_1}>{this.state.addressTip}</Text>
+                    <Text style={styles.address_input_result_2}>{this.state.address}</Text>
+                </View>
+                <Image style={styles.address_input_enter_img} source={{uri:'http://qnm.laykj.cn/image/member_more.png'}}/>
+            </TouchableOpacity>
             <View style={styles.input_view}>
                 <Text style={styles.input_name}>详细住址：</Text>
                 <TextInput
@@ -97,8 +104,20 @@ export default class ApplyingForBuyerPage extends BaseComponent{
             </View>
             <View style={styles.input_view}>
                 <Text style={styles.input_name}>采买超市：</Text>
-                <TouchableOpacity style={{marginLeft:105}} onPress={()=>this.showAddressModal2('2')}>
-                    <Text>{this.state.supermarketName}</Text>
+                <TouchableOpacity
+                    style={{marginLeft:105}}
+                    onPress={() => this.props.navigation.navigate('SuperMarketSearchPage',{
+                        onAddressSelect: (address,fullName,supermarketId) => {
+                            this.setState({
+                                supermarketName:address,
+                                supermarketId:supermarketId
+                            })
+                        }
+                    })}>
+                    <Text
+                        style={this.state.supermarketName === '' ? {color:'#999999'} : {color:'#666666'}}>
+                        {this.state.supermarketName === '' ? '请选择绑定超市' : this.state.supermarketName}
+                    </Text>
                 </TouchableOpacity>
             </View>
             <Text style={styles.id_card_title}>身份证正面</Text>
@@ -131,12 +150,6 @@ export default class ApplyingForBuyerPage extends BaseComponent{
             </TouchableOpacity>
             {/* 成功弹窗*/}
             <ApplySucceedModal ref={'ApplySucceed'} navi={this.props.navigation}/>
-            {/* 地址弹窗*/}
-            <AddressModal ref={'AddressModal'} callback={this.addressCallback.bind(this)}/>
-            {/* 选择超市模块地址弹窗*/}
-            <AddressModalSupermarket ref={'AddressModalSupermarket'} callback={this.addressCallback2.bind(this)}/>
-            {/* 超市弹窗*/}
-            {this._modalSupermarket()}
             <Toast
                 ref="toast"
                 style={{backgroundColor:'gray'}}
@@ -149,121 +162,6 @@ export default class ApplyingForBuyerPage extends BaseComponent{
       );
     }
 
-    //超市弹窗
-    setModalVisibleSupermarket(b){
-        this.setState({
-            modalVisibleSupermarket:b,
-        })
-    }
-
-    _modalSupermarket(){
-      return (
-         <Modal
-            animationType="slide"
-            transparent={true}
-            visible={this.state.modalVisibleSupermarket}
-            onRequestClose={() => {this.setModalVisibleSupermarket(false)}}>
-            <View style={{flex:1,backgroundColor:'rgba(0,0,0,0.6)',justifyContent: 'flex-end'}}>
-              <View style={{backgroundColor:'#FFF',height:height-80}}>
-                <View style={{height:36,borderBottomWidth: 1,borderBottomColor:'#D9D9D9',alignItems:'center',
-                    flexDirection:'row',paddingLeft:20,paddingRight:8,}}>
-                    <Text style={{color:'#EC7E2D',flex:1,textAlign:'center',paddingRight:24}}>选择您负责采买的超市</Text>
-                    <TouchableOpacity onPress={()=>this.setModalVisibleSupermarket(false)}>
-                        <Image style={{width:16,height:16,}} source={{uri:'http://qnm.laykj.cn/image/fork.png'}}/>
-                    </TouchableOpacity>
-                </View>
-                <FlatList
-                    renderItem={this.superMarketItemLayout}
-                    data={this.state.supermarketList}
-                    keyExtractor={(item, index) =>index.toString()} />
-              </View>
-            </View>
-       </Modal>
-      )
-    }
-
-    superMarketItemLayout({item}){
-        return (
-            <TouchableOpacity onPress={()=>this.clickSuperMarketItem(item)}>
-                <Text style={{fontSize:15,color:'#303030',lineHeight:30,paddingLeft:15}}>{item.name}</Text>
-            </TouchableOpacity>
-        )
-    }
-
-    //点击选择超市
-    clickSuperMarketItem(item){
-        this.setState({
-            supermarketId:item.supermarketId,
-            supermarketName:item.name
-        },()=>this.setModalVisibleSupermarket(false))
-    }
-
-    //获取超市数据
-    _getSupermarketData(areaCode){
-        fetch( HTTP_REQUEST.Host+'/area/Supermarket/getSupermarket.do', {
-            method: 'POST',
-            headers: {
-                accessToken:this.state.accessToken,
-                'Content-Type': 'application/json;charset=UTF-8',
-            },
-            body: JSON.stringify({
-                areaCode:areaCode
-            }),
-        })
-        .then((response) => response.json())
-        .then((responseJson)=>{
-            if('S' === responseJson.respCode){
-                this.setState({
-                    supermarketList:responseJson.data,
-                },()=> this.setModalVisibleSupermarket(true))
-            }
-        }).catch((error)=>{});
-    }
-
-    /**
-     *  父组件接收子组件的传值
-     *  address:详细地址字符串,
-     *  areaCode:小区的编号,
-     *  smallCommunityId：小区id
-     */
-    addressCallback(address,smallCommunityId,areaCode){
-        this.setState({
-            address:address,
-            areaCode:areaCode,
-           // smallCommunityId:smallCommunityId,
-        },()=>{
-            if(this.state.flag === '2'){
-                this._getSupermarketData(areaCode)
-            }
-        })
-    }
-
-    addressCallback2(areaCode){
-        this.setState({
-            areaCode:areaCode,
-        },()=>{
-            if(this.state.flag === '2'){
-                this._getSupermarketData(areaCode)
-            }
-        })
-    }
-
-    /*
-     *地址弹窗的显示
-     */
-    showAddressModal(flag){
-        this.setState({
-            flag:flag,
-        },()=>this.refs.AddressModal.setModalVisibleAddress(true))
-    }
-
-    //选择超市
-    showAddressModal2(flag){
-        this.setState({
-            flag:flag,
-        },()=>this.refs.AddressModalSupermarket.setModalVisibleAddress(true))
-    }
-
     //选择图片
     selectCard(flag){
         ImagePicker.openPicker({
@@ -271,7 +169,7 @@ export default class ApplyingForBuyerPage extends BaseComponent{
             //width: 400,
             //height: 400,
             //cropping: true,
-            // includeBase64: true,
+            //includeBase64: true,
         }).then(image => {
             flag===1?
                 this.setState({id_card_img_1:image['path'],file1:image['path']})
@@ -325,7 +223,7 @@ export default class ApplyingForBuyerPage extends BaseComponent{
         formData.append('realName',this.state.name);
         formData.append('mobile',this.state.phone);
         formData.append('areaCode',this.state.areaCode);
-        formData.append('address',this.state.address);
+        formData.append('address',this.state.street_address);
         formData.append('supermarketId',this.state.supermarketId);
         fetch( HTTP_REQUEST.Host+'/user/authentication/applyProcurer.do', {
             method: 'POST',
@@ -351,17 +249,61 @@ export default class ApplyingForBuyerPage extends BaseComponent{
 }
 
 const styles = StyleSheet.create({
+    //地址栏的输入框
+    address_input_view:{
+        height:70,
+        alignItems:'center',
+        flexDirection:'row',
+        borderBottomColor:'#D9D9D9',
+        borderBottomWidth:0.5
+    },
+    address_input_name:{
+        fontSize:18,
+        width:100,
+        paddingLeft:10
+    },
+    address_input_tip_view:{
+        flexDirection:'row',
+        height:70,
+        alignItems:'center',
+        marginLeft:5
+    },
+    address_input_tip_img:{
+        width:25,
+        height:25,
+        resizeMode:'contain'
+    },
+    address_input_tip_text:{
+        fontSize:14,
+        color:'#999999',
+        marginLeft:5
+    },
+    address_input_result_view:{
+        flexDirection:'column',
+        height:70,
+        justifyContent:'center',
+        marginLeft:5
+    },
+    address_input_result_1:{
+        fontSize:17,
+        color:'rgba(51,51,51,1)'
+    },
+    address_input_result_2:{
+        fontSize:14
+    },
+    address_input_enter_img:{
+        position:'absolute',
+        right:10,
+        width:15,
+        height:15,
+        resizeMode:'contain'
+    },
+    //其他输入框
     input_view: {
         height:50,
         borderColor:'gray',
         borderBottomWidth:0.5,
         justifyContent:'center'
-    },
-    input: {
-        position:'absolute',
-        left:100,
-        right:6,
-        height:50,
     },
     input_name: {
         position:'absolute',
@@ -371,21 +313,13 @@ const styles = StyleSheet.create({
         fontSize:18,
         left:10
     },
-    address_text: {
-        height:50,
-        left:6,
-        color:'gray',
-        fontSize:14,
-        textAlignVertical:'center'
-    },
-    supermarket_text: {
+    input: {
         position:'absolute',
-        left:108,
+        left:100,
+        right:6,
         height:50,
-        color:'gray',
-        fontSize:14,
-        textAlignVertical:'center'
     },
+    //提交审核按钮
     confirm_button: {
         width:width*0.9,
         height:45,
@@ -401,6 +335,7 @@ const styles = StyleSheet.create({
         fontSize:16,
         color:"white"
     },
+    //身份证图片框
     id_card_title: {
         fontSize:18,
         marginTop:15,

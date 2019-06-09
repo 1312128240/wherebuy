@@ -8,10 +8,8 @@ import {
     Text,
     FlatList
 } from 'react-native';
-import BaseComponent from "../../views/BaseComponent";
 
 const {width} = Dimensions.get('window');
-
 const item_data=[
   {key:"1",value: 'ApplyingForBuyerPage',imgUrl:'http://qnm.laykj.cn/image/caimai.png',tip:'申请成为采买员'},
   {key:"2",value: 'ApplyingForDeliverymanPage',imgUrl:'http://qnm.laykj.cn/image/auth_peisong.png',tip:'申请成为配送员'},
@@ -22,7 +20,7 @@ const item_data=[
 /**
  * 申请认证
  */
-export default class ApplyingForCertificatePage extends BaseComponent {
+export default class ApplyingForCertificatePage extends Component {
   
   constructor(props) {
     super(props);

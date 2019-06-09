@@ -1,17 +1,23 @@
 import React, {Component} from 'react';
-import {Image,StyleSheet,View,Dimensions,TouchableOpacity,Text,FlatList} from 'react-native';
-import {HTTP_REQUEST, Token} from "../../utils/config";
+import {
+    Image,
+    StyleSheet,
+    View,
+    Dimensions,
+    TouchableOpacity,
+    Text,
+    FlatList
+} from 'react-native';
+import {HTTP_REQUEST} from "../../utils/config";
 import asyncStorageUtil from "../../utils/AsyncStorageUtil";
 import Toast from "react-native-easy-toast";
-import BaseComponent from "../../views/BaseComponent";
 
 const {width,height} = Dimensions.get('window');
-
 
 /**
  * 我的任务页面
  */
-export default class MyTaskPage extends BaseComponent{
+export default class MyTaskPage extends Component{
   
   constructor(props) {
     super(props);
@@ -27,7 +33,6 @@ export default class MyTaskPage extends BaseComponent{
   }
 
     componentDidMount(): void {
-      super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,
@@ -35,7 +40,7 @@ export default class MyTaskPage extends BaseComponent{
                 this.getData();
             });
         });
-  }
+    }
 
 
     getData(){

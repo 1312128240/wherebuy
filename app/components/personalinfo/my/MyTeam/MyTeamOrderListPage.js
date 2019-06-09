@@ -11,14 +11,13 @@ import {HTTP_REQUEST} from "../../../../utils/config";
 import RefreshListView,{RefreshState} from "react-native-refresh-list-view";
 import AsyncStorageUtil from '../../../../utils/AsyncStorageUtil'
 import Toast from "react-native-easy-toast";
-import BaseComponent from "../../../../views/BaseComponent";
 
 const w = Dimensions.get('window').width;
 
 /**
  * 订单列表（会员列表的订单列表，代顾客下单订单记录也复用此处。接口参数有区别）
  */
-export default class MyTeamOrderListPage extends BaseComponent{
+export default class MyTeamOrderListPage extends Component{
 
     constructor(props){
         super(props);
@@ -39,7 +38,6 @@ export default class MyTeamOrderListPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         AsyncStorageUtil.getLocalData("accessToken").then(data => {
             this.setState({
                 accessToken:data,

@@ -1,5 +1,4 @@
 import React,{Component} from 'react'
-
 import {
     View,
     Text,
@@ -15,36 +14,18 @@ import {
     ScrollView
 } from "react-native";
 import {HTTP_REQUEST} from '../../../../utils/config';
-
 import Toast from 'react-native-easy-toast';
 import RefreshListView, {RefreshState} from "react-native-refresh-list-view";
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import Loading from '../../../../views/LoadingModal';
-
 
 const w = Dimensions.get('window').width;
 const h = Dimensions.get('window').height;
 
 /**
- * 价格纠错1
+ * 价格纠错
  */
-export  default class  PriceCorrectionPage extends BaseComponent{
-
-
-    static navigationOptions = ({navigation, screenProps}) => ({
-        headerTitle: '价格纠错/分享',
-        headerTitleStyle: {
-             flex:1,
-             textAlign:'center',
-        },
-        headerRight:(
-            <TouchableOpacity onPress={()=>{navigation.navigate("PriceCorrectionHistoryPage")}}>
-                <Text style={{paddingRight:10,color:'#000000',fontSize:15}}>历史</Text>
-            </TouchableOpacity>
-        )
-    });
-
+export default class PriceCorrectionPage extends Component{
 
     constructor(){
         super();
@@ -54,10 +35,10 @@ export  default class  PriceCorrectionPage extends BaseComponent{
             dataList:[],
             popWindowList:[],
             content:'',
-            barcode: "",    //条形码
-            brandId: "",    //品牌Id
-            fullName: "",   //商品名
-            valueName: "",  //规格参数
+            barcode: '',//条形码
+            brandId: '',//品牌Id
+            fullName: '',//商品名
+            valueName: '',//规格参数
             refreshState: RefreshState.Idle,
             currentPage:1,
             totalPage:0,
@@ -70,32 +51,7 @@ export  default class  PriceCorrectionPage extends BaseComponent{
         }
     }
 
-    render(): React.ReactNode {
-        return (
-            <View style={{flex:1,backgroundColor:'#F3F3F3',alignItems:'center',}}>
-                {this.listView()}
-                {this.popWindow1()}
-                {this.popWindow2()}
-
-                <Toast
-                    ref="toast"
-                    style={{backgroundColor:'gray'}}
-                    position='center'
-                    positionValue={200}
-                    textStyle={{color:'white'}}
-                />
-                <Loading ref={'Loading'} hide = {true} />
-
-                {this._hintView()}
-
-
-            </View>
-        )
-
-    }
-
     componentDidMount(): void {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,
@@ -103,6 +59,38 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                 this.Refresh();
             });
         });
+    }
+
+    static navigationOptions = ({navigation,screenProps}) => ({
+        headerTitle: '价格纠错/分享',
+        headerTitleStyle: {
+             flex:1,
+             textAlign:'center',
+        },
+        headerRight:(
+            <TouchableOpacity onPress={()=>{navigation.navigate("PriceCorrectionHistoryPage")}}>
+                <Text style={{paddingRight:10,color:'#000000',fontSize:15}}>历史</Text>
+            </TouchableOpacity>
+        )
+    });
+
+    render(): React.ReactNode {
+        return (
+            <View style={{flex:1,backgroundColor:'#F3F3F3',alignItems:'center'}}>
+                {this.listView()}
+                {this.popWindow1()}
+                {this.popWindow2()}
+                <Toast
+                    ref="toast"
+                    style={{backgroundColor:'gray'}}
+                    position='center'
+                    positionValue={200}
+                    textStyle={{color:'white'}}
+                />
+                <Loading ref={'Loading'} hide={true}/>
+                {this._hintView()}
+            </View>
+        )
     }
 
     //加载更多
@@ -119,21 +107,17 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                 fullName: this.state.fullName,
                 valueName: this.state.valueName,
                 currentPage: this.state.currentPage,
-
             }),
         })
-            .then((response) => response.json())
-            .then((responseJson)=>{
-                this.setState({
-                    dataList: [...this.state.dataList, ...responseJson.data.data],
-                    refreshState: RefreshState.Idle,
-                    currentPage: this.state.currentPage+1,
-                    totalPage:responseJson.data.totalPage,
-                })
-
-            }).catch((error)=>{
-
-        });
+        .then((response) => response.json())
+        .then((responseJson)=>{
+            this.setState({
+                dataList: [...this.state.dataList, ...responseJson.data.data],
+                refreshState: RefreshState.Idle,
+                currentPage: this.state.currentPage+1,
+                totalPage:responseJson.data.totalPage,
+            })
+        }).catch((error)=>{});
     }
 
     //刷新
@@ -152,36 +136,30 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                 currentPage: 1,
             }),
         })
-            .then((response) => response.json())
-            .then((responseJson)=>{
-
-                this.setState({
-                    dataList:responseJson.data.data,
-                    currentPage:2,
-                    totalPage:responseJson.data.totalPage,
-                    refreshState: RefreshState.Idle,
-                })
-
-            }).catch((error)=>{
-            // alert("价格纠错错误"+error)
-        });
+        .then((response) => response.json())
+        .then((responseJson)=>{
+            this.setState({
+                dataList:responseJson.data.data,
+                currentPage:2,
+                totalPage:responseJson.data.totalPage,
+                refreshState: RefreshState.Idle,
+            })
+        }).catch((error)=>{});
     }
 
     //头部搜索
-     heaerView=()=>{
+     headerView=()=>{
          return(
              <View style={{backgroundColor:'#FFF',alignItems:'center',justifyContent:'center',width:w,paddingTop:20,paddingBottom:20,}}>
                  <View>
                      <View style={{flexDirection:'row',width:w-80,marginTop:45,}}>
                          <TextInput
-                             maxLength={11}
                              placeholder="请输入商品名"
                              style={[styles.et,{flex: 1,marginRight:10}]}
                              onChangeText={(name)=>{this.setState({fullName:name,})}}>
                          </TextInput>
 
                          <TextInput
-                             maxLength={11}
                              placeholder="请输入规格参数"
                              style={[styles.et,{flex: 1,marginLeft:10}]}
                              onChangeText={(result)=>{this.setState({valueName:result,})}}>
@@ -190,7 +168,6 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                      </View>
 
                      <TextInput
-                         maxLength={11}
                          keyboardType="numeric"
                          placeholder="请输入条形码"
                          style={[styles.et,{width:w-80}]}
@@ -204,7 +181,6 @@ export  default class  PriceCorrectionPage extends BaseComponent{
 
                  <View style={{width:w-78,position:'absolute',top:5,}}>
                      <TextInput
-                         maxLength={11}
                          placeholder="请输入品牌名"
                          value={this.state.content}
                          style={[styles.et] }
@@ -245,7 +221,7 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                 renderItem={this._renderItem}
                 data={this.state.dataList}
                 keyExtractor={(item,index) =>index.toString()}
-                ListHeaderComponent={this.heaerView()}
+                ListHeaderComponent={this.headerView()}
                 refreshState={this.state.refreshState}
                 showsVerticalScrollIndicator ={false}
                 ListEmptyComponent={
@@ -264,8 +240,7 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                 }}
             />
         )
-    }
-
+    };
 
      //商品列表item
     _renderItem = ({item}) => (
@@ -405,22 +380,18 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                correctId:correctId
            }),
        })
-           .then((response) => response.json())
-           .then((responseJson)=>{
-               if("S"===responseJson.respCode){
-                   this.setState({
-                       modalDataBean2:responseJson.data,
-                   },()=>this._setModalVisible2(true))
-               }else {
-                   Alert.alert('温馨提示:', responseJson.errorMsg,
-                       ['', '', '确定'].map((dot, index) => ({text: dot,}))
-                   )
-               }
-
-
-           }).catch((error)=>{
-           // alert("价格纠错错误"+error)
-       });
+       .then((response) => response.json())
+       .then((responseJson)=>{
+           if("S"===responseJson.respCode){
+               this.setState({
+                   modalDataBean2:responseJson.data,
+               },()=>this._setModalVisible2(true))
+           }else {
+               Alert.alert('温馨提示:', responseJson.errorMsg,
+                   ['', '', '确定'].map((dot, index) => ({text: dot,}))
+               )
+           }
+       }).catch((error)=>{});
    }
 
    //弹窗1布局
@@ -444,16 +415,18 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                visible={this.state.modalVisible}
                onRequestClose={() => { this._setModalVisible(false)}}>
                <View style={{flex:1,backgroundColor:'rgba(0, 0, 0, 0.5)'}}>
-                   <View style={{height:h * 0.7,width:w,marginTop:h*0.3-15}}>
-                       <View style={{height:30,backgroundColor:'#FFFFFF',alignItems:'center'}}>
-                           <Text style={{height:30,color:'#303030',textAlignVertical:'center',fontSize:18}}>{this.state.lookName}</Text>
+                   <View style={{position:'absolute',height:h*0.7,width:w,bottom:0,backgroundColor:'#FFFFFF'}}>
+                       <View style={{height:30,alignItems:'center'}}>
+                           <Text style={{height:30,color:'#303030',textAlignVertical:'center',fontSize:18}}>
+                               {this.state.lookName}
+                           </Text>
                            <TouchableOpacity
                                style={{position:'absolute',right:10,top:2.5}}
                                onPress={() => this._setModalVisible(false)}>
                                <Image style={{width:25,height:25}} source={require('../../../../img/icon_close.png')}/>
                            </TouchableOpacity>
                        </View>
-                       <ScrollView>
+                       <ScrollView style={{position:'absolute',height:h*0.7-30,width:w,bottom:0}}>
                            {viewList}
                        </ScrollView>
                    </View>
@@ -474,7 +447,7 @@ export  default class  PriceCorrectionPage extends BaseComponent{
            >
                <TouchableWithoutFeedback onPress={()=>this._setModalVisible2(false)}>
                    <View style={{flex:1,backgroundColor:'rgba(0,0,0,0.1)',justifyContent:'flex-end',}}>
-                       <View style={{backgroundColor:'#FFF',width:w}}>
+                       <View style={{position:'absolute',height:h*0.7,width:w,bottom:0,backgroundColor:'#FFFFFF'}}>
                            <View>
                                <Text style={{height:55,lineHeight: 55,textAlign: 'center',color:'#303030',fontSize:18}}>价格正在审核中</Text>
                            </View>
@@ -482,9 +455,14 @@ export  default class  PriceCorrectionPage extends BaseComponent{
                            <Text style={styles.popWindowItemTv}>价格类型: {this.state.modalDataBean2.priceTypeForCha}</Text>
                            <Text style={styles.popWindowItemTv}>开始时间: {this.state.modalDataBean2.strStartTime}</Text>
                            <Text style={styles.popWindowItemTv}>结束时间: {this.state.modalDataBean2.strEndTime}</Text>
-                           <Text style={styles.popWindowItemTv}>纠错人员: {this.state.modalDataBean2.nickName}</Text>
-                           <Text style={[styles.popWindowItemTv,{borderBottomColor:'#DADADA',borderBottomWidth:0.5}]}>纠错价格: {(this.state.modalDataBean2.price)/100}元</Text>
-
+                           <Text style={styles.popWindowItemTv}>
+                               {this.state.modalDataBean2.type === 'SHARE' ? '分享人员: ' : '纠错人员: '}
+                               {this.state.modalDataBean2.nickName}
+                           </Text>
+                           <Text style={[styles.popWindowItemTv,{borderBottomColor:'#DADADA',borderBottomWidth:0.5}]}>
+                               {this.state.modalDataBean2.type === 'SHARE' ? '分享价格: ' : '纠错价格: '}
+                               {(this.state.modalDataBean2.price)/100}元
+                           </Text>
                            <TouchableOpacity onPress={()=>this.recall(this.state.modalDataBean2.correctId)}>
                                <Text style={{backgroundColor:'#EC7E2D',width:85,height:32,alignSelf: 'center',
                                    color:'#FFF',textAlign:'center',marginTop:20,borderRadius:6,lineHeight:32}}>撤销</Text>
@@ -526,14 +504,23 @@ export  default class  PriceCorrectionPage extends BaseComponent{
         let navigate = this.props.navigation.navigate;
         if (bean.correctType ==='CORRECT') {
             this._setModalVisible(false);
-            navigate('CorrectionAndSharePage', {title:'价格纠错',supermarketId:bean.supermarketId,parentId:bean.correctId,goodsSkuId:this.state.goodsSkuId})
+            navigate('CorrectionAndSharePage', {
+                title:'价格纠错',
+                supermarketId:bean.supermarketId,
+                parentId:bean.correctId,
+                goodsSkuId:this.state.goodsSkuId
+            })
         } else if (bean.correctType === 'VIEW') {
             this._PopWindowData2(bean.correctId)
         } else if (bean.correctType === 'SHARE') {
             this._setModalVisible(false);
-            navigate('CorrectionAndSharePage', {title:'价格分享',supermarketId:bean.supermarketId,parentId:bean.correctId,goodsSkuId:this.state.goodsSkuId})
+            navigate('CorrectionAndSharePage', {
+                title:'价格分享',
+                supermarketId:bean.supermarketId,
+                parentId:bean.correctId,
+                goodsSkuId:this.state.goodsSkuId
+            })
         }
-
     }
 
     //撤销价格

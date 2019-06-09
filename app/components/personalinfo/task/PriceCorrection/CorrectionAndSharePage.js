@@ -17,13 +17,12 @@ import {HTTP_REQUEST,} from "../../../../utils/config";
 import Toast from "react-native-easy-toast";
 import Picker from 'react-native-picker';
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import {getCurrentDate} from  '../../../../utils/dateUtil'
 
 const w=Dimensions.get('window').width;
 
 
-export default class CorrectionAndSharePage extends BaseComponent{
+export default class CorrectionAndSharePage extends Component{
 
     static navigationOptions = ({navigation, screenProps}) => ({
         headerTitle: navigation.state.params.title,
@@ -64,7 +63,6 @@ export default class CorrectionAndSharePage extends BaseComponent{
 
 
     componentDidMount(): void {
-        super.componentDidMount();
         asyncStorageUtil.getLocalData("accessToken").then(data=>{
             this.setState({
                 accessToken: data,
@@ -100,7 +98,7 @@ export default class CorrectionAndSharePage extends BaseComponent{
                 </TouchableOpacity>
 
                 <View style={styles.layout}>
-                    <Text style={styles.tv}>纠错价格:</Text>
+                    <Text style={styles.tv}>{this.props.navigation.state.params.title==='价格纠错'?'纠错价格':'分享价格'}</Text>
                     <TextInput
                         keyboardType="decimal-pad"
                         placeholder="请输入价格元"
@@ -189,10 +187,7 @@ export default class CorrectionAndSharePage extends BaseComponent{
     //选择图片
     selectPic(){
         ImagePicker.openPicker({
-            width: 400,
-            height: 400,
-            cropping: true,
-            // includeBase64: true,
+            compressImageQuality:0.7,
         }).then(image => {
             this.setState({
                 imgUrl:image['path'],

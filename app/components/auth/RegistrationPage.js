@@ -8,7 +8,7 @@ import {
     Dimensions,
     TouchableOpacity
 } from 'react-native';
-import {HTTP_REQUEST,getValidCode} from '../../utils/config'
+import {HTTP_REQUEST} from '../../utils/config'
 import Toast from 'react-native-easy-toast'
 
 const {width} = Dimensions.get('window');

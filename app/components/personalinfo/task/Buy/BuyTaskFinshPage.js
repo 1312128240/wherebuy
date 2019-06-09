@@ -5,11 +5,10 @@ import {HTTP_REQUEST} from "../../../../utils/config";
 import Toast from 'react-native-easy-toast'
 import {dateToString} from '../../../../utils/dateUtil'
 import asyncStorageUtil from "../../../../utils/AsyncStorageUtil";
-import BaseComponent from "../../../../views/BaseComponent";
 import ListEmptyView from "../../../../views/ListEmptyView";
 
 
-export  default class  BuyTaskFinshPage extends BaseComponent{
+export  default class  BuyTaskFinshPage extends Component{
 
     constructor(props) {
         super(props);
@@ -23,7 +22,6 @@ export  default class  BuyTaskFinshPage extends BaseComponent{
     }
 
     componentDidMount(): void {
-        super.componentDidMount();
         this._navListener = this.props.navigation.addListener('didFocus', () => {
             asyncStorageUtil.getLocalData("accessToken").then(data=>{
                 this.setState({

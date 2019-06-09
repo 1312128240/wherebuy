@@ -5,9 +5,8 @@ import RefreshListView,{RefreshState} from 'react-native-refresh-list-view'
 import {HTTP_REQUEST, USER_INFO} from "../../../../utils/config";
 import AsyncStorageUtil from "../../../../utils/AsyncStorageUtil";
 import Toast  from 'react-native-easy-toast'
-import BaseComponent from "../../../../views/BaseComponent";
 
-export default class MyTeamPartOrderPage extends BaseComponent{
+export default class MyTeamPartOrderPage extends Component{
 
     constructor(){
         super();
@@ -21,7 +20,6 @@ export default class MyTeamPartOrderPage extends BaseComponent{
 
 
     componentDidMount(): void {
-        super.componentDidMount();
         AsyncStorageUtil.getLocalData("accessToken").then(data => {
             this.setState({
                 accessToken: data,

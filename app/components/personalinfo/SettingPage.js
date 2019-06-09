@@ -9,14 +9,13 @@ import {
 } from 'react-native';
 import {packageVersion} from 'react-native-update';
 import asyncStorageUtil from '../../utils/AsyncStorageUtil'
-import BaseComponent from "../../views/BaseComponent";
 
 const {width} = Dimensions.get('window');
 
 /**
  * 设置页面/系统设置
  */
-export default class SettingPage extends BaseComponent{
+export default class SettingPage extends Component{
   
     constructor(props) {
         super(props);
@@ -30,31 +29,31 @@ export default class SettingPage extends BaseComponent{
     }
 
     render() {
-    let userInfo = this.props.navigation.state.params.userInfo;
-    return (
-        <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
-            <TouchableOpacity
-                style={styles.setting_item}
-                 onPress={() => this.props.navigation.navigate('ProfilePage', {userInfo:userInfo})}>
-                <Image style={styles.setting_img} source={{uri:"http://qnm.laykj.cn/image/gerenxinxi.png"}}/>
-                <Text style={styles.setting_text}>个人信息</Text>
-                <Image style={styles.enter_icon} source={{uri:"http://qnm.laykj.cn/image/member_more.png"}}/>
-            </TouchableOpacity>
-            <Text style={styles.version_text} selectable={true}>Version {packageVersion}</Text>
-            <TouchableOpacity
-              onPress={()=> this.logout()}
-              activeOpacity={0.7}
-              style={styles.logout_view}>
-              <Text style={styles.logout_text}>退出当前账户</Text>
-            </TouchableOpacity>
-        </View>
-    );
-  }
+        let userInfo = this.props.navigation.state.params.userInfo;
+        return (
+            <View style={{flex:1,backgroundColor:'#F5F5F5'}}>
+                <TouchableOpacity
+                    style={styles.setting_item}
+                     onPress={() => this.props.navigation.navigate('ProfilePage', {userInfo:userInfo})}>
+                    <Image style={styles.setting_img} source={{uri:"http://qnm.laykj.cn/image/gerenxinxi.png"}}/>
+                    <Text style={styles.setting_text}>个人信息</Text>
+                    <Image style={styles.enter_icon} source={{uri:"http://qnm.laykj.cn/image/member_more.png"}}/>
+                </TouchableOpacity>
+                <Text style={styles.version_text} selectable={true}>Version {packageVersion}</Text>
+                <TouchableOpacity
+                  onPress={()=> this.logout()}
+                  activeOpacity={0.7}
+                  style={styles.logout_view}>
+                  <Text style={styles.logout_text}>退出当前账户</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
 
     logout(){
       asyncStorageUtil.putLocalData("accessToken","");
       this.props.navigation.navigate('AppAuthNavigator');
-  }
+    }
 }
 
 const styles = StyleSheet.create({
